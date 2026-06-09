@@ -75,3 +75,22 @@ def login(
         "access_token": token,
         "token_type": "bearer"
     }
+
+from app.core.security import get_current_user
+
+@router.get("/me")
+def me(
+    current_user: User = Depends(get_current_user)
+):
+    return {
+        "id": current_user.id,
+        "name": current_user.name,
+        "email": current_user.email
+    }
+
+from fastapi import Header
+@router.get("/test-header")
+def test_header(
+    authorization: str = Header(None)
+):
+    return {"authorization": authorization}

@@ -6,6 +6,14 @@ from jose import jwt
 
 from app.core.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
+
+from fastapi import Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.database.dependencies import get_db
+from app.models.user import User
+
 password_hash = PasswordHash.recommended()
 
 # Encriptar la contraseña
@@ -35,3 +43,38 @@ def create_access_token(data: dict):
         SECRET_KEY,
         algorithm=ALGORITHM
     )
+
+# Verificar el token
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/auth/login"
+    )
+
+# Obtener el usuario actual
+def get_current_user(
+        token: str = Depends(oauth2_scheme),
+        db: Session = Depends(get_db)
+):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id = payload.get("sub")
+        
+        if user_id is None:
+            raise HTTPException(
+                status_code=401,
+                detail="Token inválido"
+            )
+        
+    except JWTError:
+        raise HTTPException(
+            status_code=401,
+            detail="Token inválido"
+        )
+    
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(
+            status_code=401,
+            detail="Usuario no encontrado"
+        )
+    
+    return user
