@@ -31,21 +31,21 @@ def create_user(
         email=new_user.email
     )
 
+from app.services.user_service import UserService
 # Endpoint para obtener todos los usuarios
 @router.get("/users", response_model=List[UserResponse])
 def get_users(
     db: Session = Depends(get_db)
 ):
-    users = db.query(User).all()
-    return users
+    return UserService.get_all_users(db)
 
 # Endpoint para obtener un usuario por su ID
-@router.get("/users/{useri_id}", response_model=UserResponse)
+@router.get("/users/{user_id}", response_model=UserResponse)
 def get_user(
     user_id: int,
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = UserService.get_user_by_id(user_id, db)
     if not user:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return user

@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import Header
 
 from sqlalchemy.orm import Session
 
@@ -8,7 +9,7 @@ from app.database.dependencies import get_db
 
 from app.models.user import User
 
-from app.schemas.auth import RegisterRequest, RegisterResponse
+from app.schemas.auth import RegisterRequest, RegisterResponse, LoginRequest, LoginResponse
 
 from app.core.security import get_password_hash
 
@@ -44,16 +45,16 @@ def register(user: RegisterRequest, db: Session  = Depends(get_db)):
     return new_user
 
 from app.core.security import verify_password, create_access_token
-from app.schemas.auth import LoginRequest, LoginResponse
 
 @router.post("/login", response_model=LoginResponse)
 def login(
+    #form_data: OAuth2PasswordRequestForm = Depends(),
     credentials: LoginRequest,
     db: Session = Depends(get_db)
 ):
     user = (
         db.query(User)
-        .filter(User.email == credentials.email)
+        .filter(User.email == credentials.username)
         .first()
     )
 
@@ -88,7 +89,6 @@ def me(
         "email": current_user.email
     }
 
-from fastapi import Header
 @router.get("/test-header")
 def test_header(
     authorization: str = Header(None)

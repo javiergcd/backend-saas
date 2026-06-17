@@ -13,6 +13,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database.dependencies import get_db
 from app.models.user import User
+from app.services.user_service import UserService
 
 password_hash = PasswordHash.recommended()
 
@@ -70,7 +71,8 @@ def get_current_user(
             detail="Token inválido"
         )
     
-    user = db.query(User).filter(User.id == int(user_id)).first()
+    #user = db.query(User).filter(User.id == int(user_id)).first()
+    user = UserService.get_user_by_id(user_id, db)
     if not user:
         raise HTTPException(
             status_code=401,
