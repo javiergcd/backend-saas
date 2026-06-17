@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import Header
+from fastapi.security import OAuth2PasswordRequestForm
 
 from sqlalchemy.orm import Session
 
@@ -9,7 +10,7 @@ from app.database.dependencies import get_db
 
 from app.models.user import User
 
-from app.schemas.auth import RegisterRequest, RegisterResponse, LoginRequest, LoginResponse
+from app.schemas.auth import RegisterRequest, RegisterResponse, LoginResponse
 
 from app.core.security import get_password_hash
 
@@ -48,13 +49,12 @@ from app.core.security import verify_password, create_access_token
 
 @router.post("/login", response_model=LoginResponse)
 def login(
-    #form_data: OAuth2PasswordRequestForm = Depends(),
-    credentials: LoginRequest,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
     user = (
         db.query(User)
-        .filter(User.email == credentials.username)
+        .filter(User.email == form_data.username)
         .first()
     )
 
@@ -64,7 +64,7 @@ def login(
             detail="Credenciales de inicio de sesión inválidas"
         )
     
-    if not verify_password(credentials.password, user.password):
+    if not verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=401,
             detail="Credenciales de inicio de sesión inválidas"
@@ -88,9 +88,3 @@ def me(
         "name": current_user.name,
         "email": current_user.email
     }
-
-@router.get("/test-header")
-def test_header(
-    authorization: str = Header(None)
-):
-    return {"authorization": authorization}

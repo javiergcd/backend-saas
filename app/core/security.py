@@ -65,13 +65,13 @@ def get_current_user(
                 detail="Token inválido"
             )
         
-    except JWTError:
+        user_id = int(user_id)
+    except (JWTError, ValueError):
         raise HTTPException(
             status_code=401,
             detail="Token inválido"
         )
     
-    #user = db.query(User).filter(User.id == int(user_id)).first()
     user = UserService.get_user_by_id(user_id, db)
     if not user:
         raise HTTPException(

@@ -8,6 +8,8 @@ from app.schemas.user import UserCreate, UserResponse, UserUpdate
 from typing import List
 
 from app.database.dependencies import get_db
+from app.core.security import get_current_user
+from app.services.user_service import UserService
 
 router = APIRouter()
 
@@ -31,13 +33,16 @@ def create_user(
         email=new_user.email
     )
 
-from app.services.user_service import UserService
 # Endpoint para obtener todos los usuarios
 @router.get("/users", response_model=List[UserResponse])
 def get_users(
     db: Session = Depends(get_db)
 ):
     return UserService.get_all_users(db)
+
+@router.get("/users/me", response_model=UserResponse)
+def get_me(current_user: User = Depends(get_current_user)):
+    return current_user
 
 # Endpoint para obtener un usuario por su ID
 @router.get("/users/{user_id}", response_model=UserResponse)
