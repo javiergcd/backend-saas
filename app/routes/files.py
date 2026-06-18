@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, HTTPException
 
 import os
 from uuid import uuid4
@@ -8,11 +8,30 @@ router = APIRouter(
     tags=["Files"]
 )
 
+ALLOWED_EXTENSIONS = [".pdf", ".png", ".jpg", ".jpeg"]
+
 # Endpoint para subir archivos
 @router.post("/upload")
 async def upload_file(
     file: UploadFile = File(...)
 ):
+    extension = os.path.splitext(file.filename)[1].lower()
+
+    if extension not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=400, 
+            detail="Tipo de archivo no permitido"
+        )
+    
+    content = await file.read()
+    MAX_FILE_SIZE = 5 * 1024 * 1024 # 5MB
+    
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=400, 
+            detail="Archivo demasiado grande"
+        )
+
     unique_filename = (f"{uuid4()}-{file.filename}")
 
     file_path = os.path.join("uploads", unique_filename)
