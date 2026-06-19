@@ -1,4 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import BackgroundTasks
 
 import os
 from uuid import uuid4
@@ -8,11 +9,15 @@ router = APIRouter(
     tags=["Files"]
 )
 
-ALLOWED_EXTENSIONS = [".pdf", ".png", ".jpg", ".jpeg"]
+ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg"}
+
+def process_file(filename: str):
+    print(f"Procesando archivo: {filename}")
 
 # Endpoint para subir archivos
 @router.post("/upload")
 async def upload_file(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...)
 ):
     extension = os.path.splitext(file.filename)[1].lower()
@@ -37,8 +42,9 @@ async def upload_file(
     file_path = os.path.join("uploads", unique_filename)
 
     with open(file_path, "wb") as buffer:
-        content = await file.read()
         buffer.write(content)
+
+    background_tasks.add_task(process_file, unique_filename)    # Añade la tarea de procesamiento al background
 
     return {
         "filename": unique_filename,
