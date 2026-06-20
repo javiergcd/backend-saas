@@ -1,0 +1,35 @@
+services:
+
+  db:
+    image: postgres:17
+
+    container_name: postgres_db
+
+    environment:
+      POSTGRES_DB: backend_saas
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+
+    container_name: backend_saas
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      - db
+
+    environment:
+      DATABASE_URL: postgresql+psycopg://postgres:admin@db:5432/backend_saas
+      # postgresql://postgres:admin@db:5432/saas_db
+
+volumes:
+  postgres_data:
