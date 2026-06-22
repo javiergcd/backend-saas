@@ -28,3 +28,9 @@ def home():
     return{
         "message": "Backend SaaS is running!"
     }
+
+@app.get("/health")
+def health_check():
+    return{
+        "status": "ok"
+    }
