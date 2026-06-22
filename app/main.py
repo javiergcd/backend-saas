@@ -10,14 +10,18 @@ from app.routes.auth import router as auth_router
 
 from app.routes.files import router as files_router
 
+from app.routes.websocket import router as websocket_router
+
 app = FastAPI()
 
 Base.metadata.create_all(bind=engine)
 
-app.include_router(users_router)    # Agrega el router de usuarios
-app.include_router(auth_router)     # Agrega el router de autenticación
+app.include_router(users_router)        # Agrega el router de usuarios
+app.include_router(auth_router)         # Agrega el router de autenticación
 
-app.include_router(files_router)    # Agrega el router de archivos
+app.include_router(files_router)        # Agrega el router de archivos
+
+app.include_router(websocket_router)    # Agrega el router de websockets
 
 @app.get("/")
 def home():
