@@ -14,6 +14,8 @@ from app.schemas.auth import RegisterRequest, RegisterResponse, LoginResponse
 
 from app.core.security import get_password_hash
 
+from app.core.logger import logger
+
 router = APIRouter(
     prefix="/auth",
     tags=["Auth"]
@@ -43,6 +45,10 @@ def register(user: RegisterRequest, db: Session  = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
+    logger.info(
+        f"New user registered: {new_user.email}"
+    )
+
     return new_user
 
 from app.core.security import verify_password, create_access_token
@@ -71,6 +77,10 @@ def login(
         )
     
     token = create_access_token({"sub": str(user.id)})
+
+    logger.info(
+        f"User login: {user.email}"
+    )
 
     return {
         "access_token": token,

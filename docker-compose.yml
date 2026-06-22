@@ -27,9 +27,16 @@ services:
     depends_on:
       - db
 
-    environment:
-      DATABASE_URL: postgresql+psycopg://postgres:admin@db:5432/backend_saas
+    env_file:
+      - .env
+    #environment:
+      #DATABASE_URL: postgresql+psycopg://postgres:admin@db:5432/backend_saas
       # postgresql://postgres:admin@db:5432/saas_db
+      #SECRET_KEY: super_secret_jwt_key_2026
+
+      #ALGORITHM:  HS256
+
+      #ACCESS_TOKEN_EXPIRE_MINUTES: 30
 
 volumes:
   postgres_data:
