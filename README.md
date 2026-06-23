@@ -1,32 +1,57 @@
 # Backend SaaS
 
-Modern Backend SaaS with FastAPI, PostgreSQL, JWT Authentication and Clean Architecture.
+A modern backend application built with FastAPI, PostgreSQL and Docker.
 
 ## Features
 
-* User CRUD operations
-* PostgreSQL integration
-* SQLAlchemy ORM
-* Pydantic validation
 * JWT Authentication
-* Password hashing with Argon2
-* Clean Architecture
-* REST API documentation with Swagger
+* User Management CRUD
+* Protected Routes
+* File Upload System
+* File Validation
+* Background Tasks
+* WebSocket Communication
+* PostgreSQL Integration
+* Alembic Migrations
+* Environment Variables
+* Docker & Docker Compose
+* API Testing with Pytest
+* Application Logging
+* Health Check Endpoint
 
 ## Tech Stack
 
+### Backend
+
 * Python 3.14
 * FastAPI
-* PostgreSQL
 * SQLAlchemy
 * Pydantic
-* JWT
-* Argon2
-* Uvicorn
+
+### Database
+
+* PostgreSQL
+* Alembic
+
+### Security
+
+* JWT Authentication
+* Argon2 Password Hashing
+
+### DevOps
+
+* Docker
+* Docker Compose
+
+### Testing
+
+* Pytest
+* FastAPI TestClient
 
 ## Project Structure
-
 ```text
+backend-saas/
+
 app/
 ├── core/
 ├── database/
@@ -34,34 +59,78 @@ app/
 ├── routes/
 ├── schemas/
 ├── services/
-└── main.py
+├── main.py
+
+tests/
+
+uploads/
+
+alembic/
 ```
+## Running Locally
 
-## Run Locally
-
+Install dependencies:
 ```bash
 pip install -r requirements.txt
-
+```
+Run application:
+```bash
 uvicorn app.main:app --reload
 ```
-
-## API Documentation
-
-```text
+Swagger documentation:
+```bash
 http://localhost:8000/docs
 ```
+## Docker
+
+Build:
+```bash
+docker build -t backend-saas .
+```
+Run:
+```bash
+docker compose up --build
+```
+## API Features
+
+Authentication:
+
+* Register
+* Login
+* JWT Token Validation
+
+Users:
+
+* Create User
+* Get Users
+* Update User
+* Delete User
+* Current Authenticated User
+
+Files:
+
+* Upload Files
+* File Validation
+* Unique File Names
+
+Realtime:
+
+* WebSockets
 
 ## Status
 
-🚧 Currently under development.
+Active Development
 
-Planned features:
+Next Planned Features:
 
-* Role-based access control
-* File uploads
-* Docker support
-* Alembic migrations
-* Automated tests
-* Cloud deployment
-* WebSockets
-* Background tasks
+* Cloud Deployment
+* CI/CD Pipeline
+* AI Integration
+* RAG System
+* OpenAI Integration
+
+## Author
+
+Javier Gustavo Corrales Delgadillo<br>
+Computer Engineering Student<br>
+Backend & AI Developer
