@@ -49,7 +49,7 @@ A modern backend application built with FastAPI, PostgreSQL and Docker.
 * FastAPI TestClient
 
 ## Project Structure
-
+```text
 backend-saas/
 
 app/
@@ -66,31 +66,31 @@ tests/
 uploads/
 
 alembic/
-
+```
 ## Running Locally
 
 Install dependencies:
-
+```bash
 pip install -r requirements.txt
-
+```
 Run application:
-
+```bash
 uvicorn app.main:app --reload
-
+```
 Swagger documentation:
-
+```bash
 http://localhost:8000/docs
-
+```
 ## Docker
 
 Build:
-
+```bash
 docker build -t backend-saas .
-
+```
 Run:
-
+```bash
 docker compose up --build
-
+```
 ## API Features
 
 Authentication:
@@ -131,6 +131,6 @@ Next Planned Features:
 
 ## Author
 
-Javier Gustavo Corrales Delgadillo
-Computer Engineering Student
+Javier Gustavo Corrales Delgadillo<br>
+Computer Engineering Student<br>
 Backend & AI Developer
