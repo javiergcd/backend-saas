@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input id="message" />
+<button onclick="sendMessage()">
+Enviar
+</button>
+
+<div id="messages"></div>
+
+<script>
+
+const ws = new WebSocket(
+    "ws://localhost:8000/ws"
+);
+
+ws.onmessage = (event) => {
+
+    const div =
+        document.getElementById(
+            "messages"
+        );
+
+    div.innerHTML +=
+        "<p>" +
+        event.data +
+        "</p>";
+};
+
+function sendMessage() {
+
+    const input =
+        document.getElementById(
+            "message"
+        );
+
+    ws.send(
+        input.value
+    );
+}
+
+</script>
+
+</body>
+</html>
