@@ -1,7 +1,9 @@
-from sqlalchemy import String
+from sqlalchemy import String, Enum as SqlaEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.base import Base
+
+from app.models.enums import UserRole
 
 class User(Base):
 
@@ -20,4 +22,8 @@ class User(Base):
     password: Mapped[str] = mapped_column(
         String(255)
     )
-    
+    role: Mapped[UserRole] = mapped_column(
+        SqlaEnum(UserRole),
+        default=UserRole.USER,
+        nullable=False
+    )
