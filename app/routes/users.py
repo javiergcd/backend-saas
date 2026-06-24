@@ -11,6 +11,8 @@ from app.database.dependencies import get_db
 from app.core.security import get_current_user
 from app.services.user_service import UserService
 
+from app.core.permissions import require_admin
+
 router = APIRouter()
 
 # Endpoint para crear un nuevo usuario
@@ -59,7 +61,8 @@ def get_user(
 @router.delete("/users/{user_id}")
 def delete_user(
     user_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    admin: User = Depends(require_admin)
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
